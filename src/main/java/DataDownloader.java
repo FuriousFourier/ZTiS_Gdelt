@@ -1,49 +1,123 @@
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 public class DataDownloader {
 
-    private static final long MAX_SIZE = 15L * 1024 * 1024 * 1024;
-    private static final File DATA_DIRECTORY = new File("dataFiles");
+    private static final File DATA_DIRECTORY = new File("dataFiles/");
+    private static final int INITIAL_BUFFER_SIZE = 200 * 1024;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws ParseException, IOException {
+        final Scanner input = new Scanner(System.in);
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        final Date DEFAULT_BEGINNING_DATE = dateFormat.parse("20180401");
+        final Date DEFAULT_ENDING_DATE = dateFormat.parse("20190406");
+        final String filesizesUrl = "http://data.gdeltproject.org/gkg/";
 
-        Scanner inputScanner = new Scanner(System.in);
-        System.out.println("Kasować dane?");
-        if (inputScanner.nextLine().equals("tak")) {
-            Process exec = Runtime.getRuntime().exec("rm -rf " + DATA_DIRECTORY.getName());
-            try (Scanner removerInput = new Scanner(exec.getInputStream())) {
-                while (exec.isAlive()) {
-                    /*if (removerInput.hasNext()) {
-                        System.out.println(removerInput.next());
-                    }*/
-                    Thread.sleep(100);
-                }
+        System.out.println("Default beginning date: " + dateFormat.format(DEFAULT_BEGINNING_DATE));
+        System.out.println("Default ending date: " + dateFormat.format(DEFAULT_ENDING_DATE));
+
+        if (!DATA_DIRECTORY.exists()) {
+            System.out.println("Directory " + DATA_DIRECTORY.getAbsolutePath() + " doesn't exist, I'll try to create it");
+            if (!DATA_DIRECTORY.mkdir()) {
+                System.err.println("I couldn't create directory, I ragequit");
+                System.exit(3);
             }
         }
-        long sumSize = 0;
-        try (Scanner scanner = new Scanner(new URL("http://data.gdeltproject.org/gdeltv2/masterfilelist.txt").openStream())) {
-            while (sumSize < MAX_SIZE && scanner.hasNextLine()) {
-                String dataUrlString = scanner.nextLine().split("\\s")[2];
-                String[] split = dataUrlString.split("/");
-                File dataFile = new File(DATA_DIRECTORY + "/" + split[split.length - 1]);
-                Process wgetProcess = Runtime.getRuntime().exec("wget " + dataUrlString + " -O " + DATA_DIRECTORY.getName() + "/" + dataFile.getName());
-                while (wgetProcess.isAlive()) {
-                    try (Scanner processOutput = new Scanner(wgetProcess.getInputStream())) {
-                        if (processOutput.hasNext()) {
-                            System.out.println(processOutput.next());
-                        }
-                        Thread.sleep(10);
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-                sumSize += dataFile.length();
+        long sumSizes = 0;
+        long lineCounter = 0;
+        List<String> filenames = new LinkedList<>();
+        try (Scanner fileSizesInput = new Scanner(new ByteArrayInputStream(downloadToMemory(filesizesUrl + "filesizes")))){
+            while (fileSizesInput.hasNextLine()
+                    && dateFormat.parse(fileSizesInput.nextLine().split(" ")[1].split("\\.")[0]).before(DEFAULT_BEGINNING_DATE)){
+                ++lineCounter;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            if (!fileSizesInput.hasNextLine()) {
+                System.err.println("No data to download, something went wrong");
+                System.exit(1);
+            }
+            while (fileSizesInput.hasNextLine()) {
+                String[] line = fileSizesInput.nextLine().split(" ");
+                Date thisDate = dateFormat.parse(line[1].split("\\.")[0]);
+                if (thisDate.after(DEFAULT_ENDING_DATE)) {
+                    break;
+                }
+                sumSizes += Long.parseLong(line[0]);
+                filenames.add(line[1]);
+
+                ++lineCounter;
+                //Each big file is preceding with small file that is ignored
+                if (!fileSizesInput.hasNextLine()) {
+                    System.err.println("Before big file there is no small file, line number " + lineCounter);
+                    System.err.println("Date of file: " + thisDate + "\tEnding date:" + DEFAULT_ENDING_DATE);
+                    System.exit(2);
+                }
+                ++lineCounter;
+                fileSizesInput.nextLine();
+            }
+            System.out.println("Needed size for downloaded ZIPPED files: " + convertSizeToString(sumSizes) + ". Would you like to continue?");
+            String inputLine = input.nextLine();
+            if (inputLine.toLowerCase().equals("n")) {
+                System.out.println("Lel K. Bye");
+                System.exit(0);
+            }
+            final List<String> fails = new LinkedList<>();
+            filenames.forEach(filename -> {
+                try {
+                    System.out.println("Downloading: " + filename);
+                    downloadUsingStream(filesizesUrl + filename, DATA_DIRECTORY.getAbsolutePath() +"/" + filename);
+                } catch (IOException e) {
+                    fails.add(filename);
+                    System.err.println("Error:");
+                    e.printStackTrace();
+                }
+            });
+            System.out.println("Files that failed to be downloaded:");
+            fails.forEach(System.out::println);
+            System.out.println("Bye");
+            System.exit(0);
         }
+
+    }
+
+    //inspired by https://www.journaldev.com/924/java-download-file-url
+    private static byte[] downloadToMemory(String urlStr) throws IOException {
+        URL url = new URL(urlStr);
+        try(BufferedInputStream bis = new BufferedInputStream(url.openStream());
+        ByteArrayOutputStream fis = new ByteArrayOutputStream(INITIAL_BUFFER_SIZE)){
+
+            byte[] buffer = new byte[1024];
+            int count;
+            while ((count = bis.read(buffer, 0, 1024)) != -1) {
+                fis.write(buffer, 0, count);
+            }
+            return fis.toByteArray();
+        }
+    }
+
+    //from https://www.journaldev.com/924/java-download-file-url
+    private static void downloadUsingStream(String urlStr, String file) throws IOException{
+        URL url = new URL(urlStr);
+        try(BufferedInputStream bis = new BufferedInputStream(url.openStream());
+            FileOutputStream fis = new FileOutputStream(file)) {
+            byte[] buffer = new byte[1024];
+            int count;
+            while ((count = bis.read(buffer, 0, 1024)) != -1) {
+                fis.write(buffer, 0, count);
+            }
+        }
+    }
+
+    private static String convertSizeToString(long size) {
+        return new StringBuilder().append(size).append("B ")
+                .append(size / 1024).append("KB ")
+                .append(size / 1024 / 1024).append("MB ")
+                .append(size / 1024 / 1024 / 1024).append("GB")
+                .toString();
     }
 }
