@@ -63,10 +63,16 @@ public class DataDownloader {
                 fileSizesInput.nextLine();
             }
             System.out.println("Needed size for downloaded ZIPPED files: " + convertSizeToString(sumSizes) + ". Would you like to continue?");
-            String inputLine = input.nextLine();
-            if (inputLine.toLowerCase().equals("n")) {
-                System.out.println("Lel K. Bye");
-                System.exit(0);
+            while(true) {
+                String inputLine = input.nextLine();
+
+                if (inputLine.toLowerCase().equals("n")) {
+                    System.out.println("Lel K. Bye");
+                    System.exit(0);
+                } else if (inputLine.toLowerCase().equals("y")) {
+                    break;
+                }
+                System.out.println("I don't understand you. Would you like to continue?");
             }
             final List<String> fails = new LinkedList<>();
             filenames.forEach(filename -> {
