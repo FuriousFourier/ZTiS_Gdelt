@@ -9,7 +9,8 @@ import java.util.Scanner;
 
 public class DataDownloader {
 
-    private static final File DATA_DIRECTORY = new File("dataFiles/");
+    private static final File PAWEL_DATA_DIRECTORY = new File("/media/pawel/diacetylomorfina/ztis/datafiles");
+    private static final File DEFAULT_DATA_DIRECTORY = new File("dataFiles/");
     private static final int INITIAL_BUFFER_SIZE = 200 * 1024;
 
     public static void main(String[] args) throws ParseException, IOException {
@@ -22,9 +23,10 @@ public class DataDownloader {
         System.out.println("Default beginning date: " + dateFormat.format(DEFAULT_BEGINNING_DATE));
         System.out.println("Default ending date: " + dateFormat.format(DEFAULT_ENDING_DATE));
 
-        if (!DATA_DIRECTORY.exists()) {
-            System.out.println("Directory " + DATA_DIRECTORY.getAbsolutePath() + " doesn't exist, I'll try to create it");
-            if (!DATA_DIRECTORY.mkdir()) {
+        File dataDirectory = PAWEL_DATA_DIRECTORY;
+        if (!dataDirectory.exists()) {
+            System.out.println("Directory " + dataDirectory.getAbsolutePath() + " doesn't exist, I'll try to create it");
+            if (!dataDirectory.mkdirs()) {
                 System.err.println("I couldn't create directory, I ragequit");
                 System.exit(3);
             }
@@ -70,7 +72,7 @@ public class DataDownloader {
             filenames.forEach(filename -> {
                 try {
                     System.out.println("Downloading: " + filename);
-                    downloadUsingStream(filesizesUrl + filename, DATA_DIRECTORY.getAbsolutePath() +"/" + filename);
+                    downloadUsingStream(filesizesUrl + filename, dataDirectory.getAbsolutePath() +"/" + filename);
                 } catch (IOException e) {
                     fails.add(filename);
                     System.err.println("Error:");
