@@ -2,28 +2,66 @@ import java.io.*;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class DataDownloader {
 
-    private static final File PAWEL_DATA_DIRECTORY = new File("/media/pawel/diacetylomorfina/ztis/datafiles");
-    private static final File DEFAULT_DATA_DIRECTORY = new File("dataFiles/");
-    private static final int INITIAL_BUFFER_SIZE = 200 * 1024;
+    private static final int DEFAULT_BUFFER_SIZE = 200 * 1024;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+    private static final Date DEFAULT_BEGINNING_DATE = new Date(118, Calendar.APRIL, 13);
+    private static final Date DEFAULT_ENDING_DATE = new Date(119, Calendar.APRIL, 6);
 
-    public static void main(String[] args) throws ParseException, IOException {
+    private final File dataDirectory;
+    private Date begginningDate;
+    private Date endingDate;
+    private int initialBufferSize;
+
+    public DataDownloader(File dataDirectory) {
+        this(dataDirectory, DEFAULT_BUFFER_SIZE);
+    }
+
+    public DataDownloader(File dataDirectory, int initialBufferSize) {
+        this.dataDirectory = dataDirectory;
+        this.initialBufferSize = initialBufferSize;
+        this.begginningDate = DEFAULT_BEGINNING_DATE;
+        this.endingDate = DEFAULT_ENDING_DATE;
+    }
+
+    public File getDataDirectory() {
+        return dataDirectory;
+    }
+
+    public int getInitialBufferSize() {
+        return initialBufferSize;
+    }
+
+    public void setInitialBufferSize(int initialBufferSize) {
+        this.initialBufferSize = initialBufferSize;
+    }
+
+    public Date getBegginningDate() {
+        return begginningDate;
+    }
+
+    public void setBegginningDate(Date begginningDate) {
+        this.begginningDate = begginningDate;
+    }
+
+    public Date getEndingDate() {
+        return endingDate;
+    }
+
+    public void setEndingDate(Date endingDate) {
+        this.endingDate = endingDate;
+    }
+
+    public void downloadData() throws ParseException, IOException {
         final Scanner input = new Scanner(System.in);
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        final Date DEFAULT_BEGINNING_DATE = dateFormat.parse("20180401");
-        final Date DEFAULT_ENDING_DATE = dateFormat.parse("20190406");
         final String filesizesUrl = "http://data.gdeltproject.org/gkg/";
 
-        System.out.println("Default beginning date: " + dateFormat.format(DEFAULT_BEGINNING_DATE));
-        System.out.println("Default ending date: " + dateFormat.format(DEFAULT_ENDING_DATE));
+        System.out.println("Beginning date: " + DATE_FORMAT.format(begginningDate));
+        System.out.println("Ending date: " + DATE_FORMAT.format(endingDate));
 
-        File dataDirectory = PAWEL_DATA_DIRECTORY;
         if (!dataDirectory.exists()) {
             System.out.println("Directory " + dataDirectory.getAbsolutePath() + " doesn't exist, I'll try to create it");
             if (!dataDirectory.mkdirs()) {
@@ -36,7 +74,7 @@ public class DataDownloader {
         List<String> filenames = new LinkedList<>();
         try (Scanner fileSizesInput = new Scanner(new ByteArrayInputStream(downloadToMemory(filesizesUrl + "filesizes")))){
             while (fileSizesInput.hasNextLine()
-                    && dateFormat.parse(fileSizesInput.nextLine().split(" ")[1].split("\\.")[0]).before(DEFAULT_BEGINNING_DATE)){
+                    && DATE_FORMAT.parse(fileSizesInput.nextLine().split(" ")[1].split("\\.")[0]).before(begginningDate)){
                 ++lineCounter;
             }
             if (!fileSizesInput.hasNextLine()) {
@@ -45,8 +83,8 @@ public class DataDownloader {
             }
             while (fileSizesInput.hasNextLine()) {
                 String[] line = fileSizesInput.nextLine().split(" ");
-                Date thisDate = dateFormat.parse(line[1].split("\\.")[0]);
-                if (thisDate.after(DEFAULT_ENDING_DATE)) {
+                Date thisDate = DATE_FORMAT.parse(line[1].split("\\.")[0]);
+                if (thisDate.after(endingDate)) {
                     break;
                 }
                 sumSizes += Long.parseLong(line[0]);
@@ -90,14 +128,13 @@ public class DataDownloader {
             System.out.println("Bye");
             System.exit(0);
         }
-
     }
 
     //inspired by https://www.journaldev.com/924/java-download-file-url
     private static byte[] downloadToMemory(String urlStr) throws IOException {
         URL url = new URL(urlStr);
         try(BufferedInputStream bis = new BufferedInputStream(url.openStream());
-        ByteArrayOutputStream fis = new ByteArrayOutputStream(INITIAL_BUFFER_SIZE)){
+        ByteArrayOutputStream fis = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE)){
 
             byte[] buffer = new byte[1024];
             int count;

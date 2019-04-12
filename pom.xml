@@ -31,7 +31,7 @@
                 </executions>
                 <configuration>
                     <executable>maven</executable>
-                    <mainClass>DataDownloader</mainClass>
+                    <mainClass>GdeltAnalyzer</mainClass>
                 </configuration>
             </plugin>
         </plugins>
