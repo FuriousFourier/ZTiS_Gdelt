@@ -1,4 +1,22 @@
-.idea
-*.iml
-target
+# OS level ignores
+.DS_Store
+[Tt]humbs.db
 
+# Generic stuff to ignore from build tools
+node_modules/
+*.log
+
+# Intellij project
+.idea/
+*.iml
+
+# Gradle ignores
+.gradle/
+gradle/
+gradlew*
+build/
+out/
+bin/
+
+# Custom project stuff
+secrets.env
