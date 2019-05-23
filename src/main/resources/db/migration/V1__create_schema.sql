@@ -1,0 +1,35 @@
+
+CREATE TABLE events
+(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE organizations
+(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE sources
+(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE types
+(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE persons
+(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE locations
+(
+    id INTEGER PRIMARY KEY
+);
+
+CREATE TABLE cameo_events
+(
+    id INTEGER PRIMARY KEY
+)
