@@ -20,3 +20,7 @@ bin/
 
 # Custom project stuff
 secrets.env
+
+target/
+target/*
+.attach_pid*
