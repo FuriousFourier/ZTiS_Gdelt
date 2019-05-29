@@ -19,8 +19,8 @@ CREATE TABLE source
 
 CREATE TABLE source_event
 (
-    source_id BIGINT REFERENCES source(id),
-    event_id BIGINT REFERENCES event(id),
+    source_id BIGINT,
+    event_id BIGINT,
     PRIMARY KEY(source_id, event_id)
 );
 
@@ -39,8 +39,8 @@ CREATE TABLE person
 
 CREATE TABLE person_event
 (
-    person_id BIGINT REFERENCES person(id),
-    event_id BIGINT REFERENCES event(id),
+    person_id BIGINT,
+    event_id BIGINT,
     PRIMARY KEY(person_id, event_id)
 );
 
@@ -56,8 +56,8 @@ CREATE TABLE location
 
 CREATE TABLE location_event
 (
-    location_id BIGINT REFERENCES location(id),
-    event_id BIGINT REFERENCES event(id),
+    location_id BIGINT,
+    event_id BIGINT,
     PRIMARY KEY(location_id, event_id)
 );
 
@@ -75,10 +75,17 @@ CREATE TABLE event
 
     -- many-to-one
     organization_id BIGINT REFERENCES organization(id),
-    event_type_id BIGINT REFERENCES event_type(id),
-
-    -- many-to-many
-   sources BIGINT REFERENCES source_event(event_id),
-   persons BIGINT REFERENCES person_event(event_id),
-   locations BIGINT REFERENCES location_event(event_id)
+    event_type_id BIGINT REFERENCES event_type(id)
 );
+
+ALTER TABLE source_event
+    ADD CONSTRAINT source_event_source_fk FOREIGN KEY (source_id) REFERENCES source(id),
+    ADD CONSTRAINT source_event_event_fk FOREIGN KEY (event_id) REFERENCES event(id);
+
+ALTER TABLE person_event
+    ADD CONSTRAINT person_event_person_fk FOREIGN KEY (person_id) REFERENCES person(id),
+    ADD CONSTRAINT person_event_event_fk FOREIGN KEY (event_id) REFERENCES event(id);
+
+ALTER TABLE location_event
+    ADD CONSTRAINT location_event_person_fk FOREIGN KEY (location_id) REFERENCES location(id),
+    ADD CONSTRAINT location_event_event_fk FOREIGN KEY (event_id) REFERENCES event(id);
