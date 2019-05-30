@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="en">
 <head>
     <title>Gdelt ZTIS</title>
@@ -28,111 +29,66 @@
 </div>
 <section class="search-sec">
     <div class="container">
-        <form action="#" method="post" novalidate="novalidate">
+        <form action="#" th:action="@{/aggregation}" th:object="${aggregationForm}" method="post" novalidate="novalidate">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <input type="text" id="select-daterange" name="daterange" value="01/01/2018 - 31/01/2018" />
+                            <input type="text" id="select-daterange" name="daterange" th:value="*{formDateRange}" th:field="*{formDateRange}" />
                         </div>
                     </div>
                     <div class="row">
-                        <p>Event</p>
+                        <p>Event type</p>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-event-type">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
+                            <select class="form-control search-select2" id="select2-event-type" th:field="*{formEventType}">
+                                <option value=""></option>
+                                <option th:each="eventType : ${eventTypes}" th:value="${eventType}" th:text="${eventType}"
+                                        th:selected="${eventType} == *{formEventType}"></option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <p>Source</p>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-source">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
+                            <select class="form-control search-select2" id="select2-source", th:field="*{formSource}">
+                                <option value=""></option>
+                                <option th:each="source : ${sources}" th:value="${source}" th:text="${source}"
+                                        th:selected="${source} == *{formSource}"></option>
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <select class="form-control search-select2" id="select2-source-exact">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
+                                <option value=""></option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <p>Who</p>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-organization">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
+                            <select class="form-control search-select2" id="select2-organization" th:field="*{formOrganization}">
+                                <option value=""></option>
+                                <option th:each="organization : ${organizations}" th:value="${organization}" th:text="${organization}"></option>
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-person">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
+                            <select class="form-control search-select2" id="select2-person" th:field="*{formPerson}">
+                                <option value=""></option>
+                                <option th:each="person : ${persons}" th:value="${person}" th:text="${person}"></option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <p>Where</p>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-country">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
+                            <select class="form-control search-select2" id="select2-country" th:field="*{formCountry}">
+                                <option value=""></option>
+                                <option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-country-code">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-city">
-                                <option></option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
-                                <option>Example one</option>
+                            <select class="form-control search-select2" id="select2-city" th:field="*{formCity}">
+                                <option value=""></option>
+                                <option th:each="city : ${cities}" th:value="${city}" th:text="${city}"></option>
                             </select>
                         </div>
                     </div>
@@ -142,7 +98,7 @@
 <!--                        </div>-->
 
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <button type="button" class="btn btn-danger wrn-btn">Search</button>
+                            <button type="submit" class="btn btn-danger wrn-btn">Search</button>
                         </div>
                     </div>
                 </div>
@@ -165,31 +121,27 @@
         });
 
         $('#select2-source').select2({
-            placeholder: "Select source"
+            placeholder: "Select formSource"
         });
 
         $('#select2-source-exact').select2({
-            placeholder: "Select exact source url"
+            placeholder: "Select exact formSource url"
         });
 
         $('#select2-organization').select2({
-            placeholder: "Select an organization"
+            placeholder: "Select an formOrganization"
         });
 
         $('#select2-person').select2({
-            placeholder: "Select person"
+            placeholder: "Select formPerson"
         });
 
         $('#select2-country').select2({
-            placeholder: "Select country"
-        });
-
-        $('#select2-country-code').select2({
-            placeholder: "Select country code"
+            placeholder: "Select formCountry"
         });
 
         $('#select2-city').select2({
-            placeholder: "Select city"
+            placeholder: "Select formCity"
         });
     });
 
