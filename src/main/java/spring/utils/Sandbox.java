@@ -1,17 +1,19 @@
+package spring.utils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
-public class GdeltAnalyzer {
+public class Sandbox {
 
     private static final File PAWEL_DATA_DIRECTORY = new File("/media/pawel/Diacetylomorfina/ztis/dataFiles");
     private static final File DEFAULT_DATA_DIRECTORY = new File("dataFiles/");
 
-    private GdeltAnalyzer(){}
+    private Sandbox(){}
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void pursueSampleAnalysis(String[] args) throws FileNotFoundException {
         File dataFile = null;
         for (File file : Objects.requireNonNull(DEFAULT_DATA_DIRECTORY.listFiles())) {
             if (file.getName().endsWith(".csv.zip")) {
@@ -21,7 +23,7 @@ public class GdeltAnalyzer {
         }
         if (dataFile == null) {
             System.err.println("No data files");
-        System.exit(2);
+            System.exit(2);
         }
 
         System.out.println("Datafile: " + dataFile.getAbsolutePath());
