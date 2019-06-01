@@ -5,14 +5,16 @@
     <title>Gdelt ZTIS</title>
     <meta charset="utf-8">
 
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <!-- DATE RANGE PICKER -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+    <!-- DATE PICKER -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <!-- SELECT2 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
@@ -30,18 +32,18 @@
 <div class="container">
     <div class="row pt-1 pb-1">
         <div class="col-lg-12">
-            <h4 class="text-center">ZTIS Gdelt Aggregation</h4>
+            <h4 class="text-center">ZTIS Gdelt Prediction</h4>
         </div>
     </div>
 </div>
 <section class="search-sec">
     <div class="container">
-        <form action="#" th:action="@{/aggregation}" th:object="${aggregationForm}" method="post" novalidate="novalidate">
+        <form action="#" th:action="@{/prediction}" th:object="${predictionForm}" method="post" novalidate="novalidate">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <input type="text" id="select-daterange" name="daterange" th:value="*{formDateRange}" th:field="*{formDateRange}" />
+                            <input type="text" id="select-date" class="form-control" th:value="*{formDate}" th:field="*{formDate}" />
                         </div>
                     </div>
                     <div class="row">
@@ -111,7 +113,7 @@
 <div class="container" th:if="${results}">
     <div class="row pt-1 pb-1">
         <div class="col-lg-12">
-            <h4 class="text-center">Result for date range: <span th:text="${result.formDateRange}"></span></h4>
+            <h4 class="text-center">Prediction for date: <span th:text="${result.formDate}"></span></h4>
         </div>
         <div class="col-lg-12" th:if="${result.formEventType != ''}">
             <h6 class="text-center">Event type: <span th:text="${result.formEventType}"></span></h6>
@@ -137,21 +139,18 @@
     </div>
     <div class="row pt-1 pb-1">
         <div class="col-lg-6">
-            <h4 class="text-center">Number of events: <span th:text="${aggregationResult.events}"></span></h4>
+            <h4 class="text-center">Number of events: <span th:text="${predictionResult.events}"></span></h4>
         </div>
         <div class="col-lg-6">
-            <h4 class="text-center">Number of articles: <span th:text="${aggregationResult.articles}"></span></h4>
+            <h4 class="text-center">Number of articles: <span th:text="${predictionResult.articles}"></span></h4>
         </div>
     </div>
 </div>
 
 <script>
     $(document).ready(function() {
-        $('#select-daterange').daterangepicker({
-            opens: 'right',
-            locale: {
-                format: 'DD/MM/YYYY'
-            }
+        $('#select-date').datepicker({
+            dateFormat: "dd/mm/yy"
         });
 
         $('#select2-event-type').select2({

@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import spring.calculation.Aggregator;
 import spring.form.AggregationForm;
+import spring.form.PredictionForm;
 import spring.repository.*;
 
 @Controller
-public class AggregationController {
+public class MvcController {
 
     @Autowired
     private EventTypeRepository eventTypeRepository;
@@ -43,9 +44,9 @@ public class AggregationController {
     @PostMapping("/aggregation")
     public String aggregationResult(@ModelAttribute AggregationForm aggregationForm, Model model) {
         System.out.println(aggregationForm);
+        model.addAttribute("aggregationForm", new AggregationForm());
 
         model.addAttribute("results", true);
-        model.addAttribute("aggregationForm", new AggregationForm());
         model.addAttribute("result", aggregationForm);
 
         model.addAttribute("aggregationResult", aggregator.calculate(aggregationForm));
@@ -53,6 +54,30 @@ public class AggregationController {
         addAllAttributes(model);
 
         return "aggregate";
+    }
+
+    @GetMapping("/prediction")
+    public String prediction(Model model) {
+        model.addAttribute("predictionForm", new PredictionForm());
+
+        addAllAttributes(model);
+
+        return "prediction";
+    }
+
+    @PostMapping("/prediction")
+    public String predictionResult(@ModelAttribute PredictionForm predictionForm, Model model) {
+        System.out.println(predictionForm);
+        model.addAttribute("predictionForm", new PredictionForm());
+
+        model.addAttribute("results", true);
+        model.addAttribute("result", predictionForm);
+
+        model.addAttribute("predictionResult", new ResultModel(0, 0));
+
+        addAllAttributes(model);
+
+        return "prediction";
     }
 
     private void addAllAttributes(Model model) {

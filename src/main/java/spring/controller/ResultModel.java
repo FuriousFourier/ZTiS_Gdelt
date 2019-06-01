@@ -1,12 +1,12 @@
 package spring.controller;
 
-public class AggregationResultModel {
+public class ResultModel {
 
     private long events;
 
     private long articles;
 
-    public AggregationResultModel(long events, long articles) {
+    public ResultModel(long events, long articles) {
         this.events = events;
         this.articles = articles;
     }

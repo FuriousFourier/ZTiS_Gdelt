@@ -5,18 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-import spring.controller.AggregationResultModel;
+import spring.controller.ResultModel;
 import spring.form.AggregationForm;
 
 @Service
 public class Aggregator {
 
-    private final RowMapper<AggregationResultModel> aggRowMapper = (resultSet, i) ->
-            new AggregationResultModel(resultSet.getLong(1), resultSet.getLong(2));
+    private final RowMapper<ResultModel> aggRowMapper = (resultSet, i) ->
+            new ResultModel(resultSet.getLong(1), resultSet.getLong(2));
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public AggregationResultModel calculate(AggregationForm aggregationForm) {
+    public ResultModel calculate(AggregationForm aggregationForm) {
         String[] dateRange = formatDate(aggregationForm.getFormDateRange());
 
         StringBuilder selectBuilder = new StringBuilder("select sum(e.count), sum(e.articles_number) from event as e ");

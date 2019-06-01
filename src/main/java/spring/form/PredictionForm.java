@@ -1,8 +1,8 @@
 package spring.form;
 
-public class AggregationForm {
+public class PredictionForm {
 
-    private String formDateRange = "01/01/2018 - 31/01/2018";
+    private String formDate = "01/01/2019";
 
     private String formEventType = "";
 
@@ -18,12 +18,12 @@ public class AggregationForm {
 
     private String formPerson = "";
 
-    public String getFormDateRange() {
-        return formDateRange;
+    public String getFormDate() {
+        return formDate;
     }
 
-    public void setFormDateRange(String formDateRange) {
-        this.formDateRange = formDateRange;
+    public void setFormDate(String formDate) {
+        this.formDate = formDate;
     }
 
     public String getFormSourceUrl() {
@@ -84,8 +84,8 @@ public class AggregationForm {
 
     @Override
     public String toString() {
-        return "AggregationForm{" +
-                "formDateRange='" + formDateRange + '\'' +
+        return "PredictionForm{" +
+                "formDate='" + formDate + '\'' +
                 ", formEventType='" + formEventType + '\'' +
                 ", formSource='" + formSource + '\'' +
                 ", formSourceUrl='" + formSourceUrl + '\'' +
@@ -95,4 +95,5 @@ public class AggregationForm {
                 ", formPerson='" + formPerson + '\'' +
                 '}';
     }
+
 }
