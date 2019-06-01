@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import spring.calculation.Aggregator;
 import spring.form.AggregationForm;
 import spring.repository.*;
 
@@ -19,9 +20,6 @@ public class AggregationController {
     private SourceRepository sourceRepository;
 
     @Autowired
-    private SourceUrlRepository sourceUrlRepository;
-
-    @Autowired
     private OrganizationRepository organizationRepository;
 
     @Autowired
@@ -29,6 +27,9 @@ public class AggregationController {
 
     @Autowired
     private LocationRepository locationRepository;
+
+    @Autowired
+    private Aggregator aggregator;
 
     @GetMapping("/aggregation")
     public String aggregation(Model model) {
@@ -43,7 +44,12 @@ public class AggregationController {
     public String aggregationResult(@ModelAttribute AggregationForm aggregationForm, Model model) {
         System.out.println(aggregationForm);
 
+        model.addAttribute("results", true);
         model.addAttribute("aggregationForm", new AggregationForm());
+        model.addAttribute("result", aggregationForm);
+
+        model.addAttribute("aggregationResult", aggregator.calculate(aggregationForm));
+
         addAllAttributes(model);
 
         return "aggregate";
@@ -55,13 +61,10 @@ public class AggregationController {
         model.addAttribute("sources", sourceRepository.getAllSources());
 
         model.addAttribute("countries", locationRepository.getAllCountries());
-//        model.addAttribute("cities", locationRepository.getAllCities());
 
         model.addAttribute("organizations", organizationRepository.getAllOrganizations());
 
         model.addAttribute("persons", personRepository.getAllPersons());
     }
-
-
 
 }

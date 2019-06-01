@@ -98,10 +98,6 @@
                         </div>
                     </div>
                     <div class="row">
-<!--                        <div class="col-lg-3 col-md-3 col-sm-12 p-0">-->
-<!--                            <input type="text" class="form-control search-slt" placeholder="Enter Drop City">-->
-<!--                        </div>-->
-
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <button type="submit" class="btn btn-danger wrn-btn">Search</button>
                         </div>
@@ -111,6 +107,43 @@
         </form>
     </div>
 </section>
+
+<div class="container" th:if="${results}">
+    <div class="row pt-1 pb-1">
+        <div class="col-lg-12">
+            <h4 class="text-center">Result for date range: <span th:text="${result.formDateRange}"></span></h4>
+        </div>
+        <div class="col-lg-12" th:if="${result.formEventType != ''}">
+            <h6 class="text-center">Event type: <span th:text="${result.formEventType}"></span></h6>
+        </div>
+        <div class="col-lg-12" th:if="${result.formSource != ''}">
+            <h6 class="text-center">Source: <span th:text="${result.formSource}"></span></h6>
+        </div>
+        <div class="col-lg-12" th:if="${result.formSourceUrl != ''}">
+            <h6 class="text-center">Source url: <span th:text="${result.formSourceUrl}"></span></h6>
+        </div>
+        <div class="col-lg-12" th:if="${result.formCountry != ''}">
+            <h6 class="text-center">Country: <span th:text="${result.formCountry}"></span></h6>
+        </div>
+        <div class="col-lg-12" th:if="${result.formCity != ''}">
+            <h6 class="text-center">City: <span th:text="${result.formCity}"></span></h6>
+        </div>
+        <div class="col-lg-12" th:if="${result.formOrganization != ''}">
+            <h6 class="text-center">Organization: <span th:text="${result.formOrganization}"></span></h6>
+        </div>
+        <div class="col-lg-12" th:if="${result.formPerson != ''}">
+            <h6 class="text-center">Person: <span th:text="${result.formPerson}"></span></h6>
+        </div>
+    </div>
+    <div class="row pt-1 pb-1">
+        <div class="col-lg-6">
+            <h4 class="text-center">Number of events: <span th:text="${aggregationResult.events}"></span></h4>
+        </div>
+        <div class="col-lg-6">
+            <h4 class="text-center">Number of articles: <span th:text="${aggregationResult.articles}"></span></h4>
+        </div>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {

@@ -1,5 +1,7 @@
 package spring.form;
 
+import org.apache.logging.log4j.util.Strings;
+
 public class AggregationForm {
 
     private String formDateRange = "01/01/2018 - 31/01/2018";
