@@ -11,29 +11,20 @@ public class Location {
     private long id;
 
     @Column
-    private String countryCode;
-
-    @Column
     private String country;
 
     @Column
     private String city;
 
-    @Column
-    private double latitude;
-
-    @Column
-    private double longitude;
-
     @ManyToMany(mappedBy = "locations")
     private Set<Event> events;
 
-    public Location(String countryCode, String country, String city, double latitude, double longitude, Set<Event> events) {
-        this.countryCode = countryCode;
+    public Location() {
+    }
+
+    public Location(String country, String city, Set<Event> events) {
         this.country = country;
         this.city = city;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.events = events;
     }
 
@@ -43,14 +34,6 @@ public class Location {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
     }
 
     public String getCountry() {
@@ -67,22 +50,6 @@ public class Location {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     public Set<Event> getEvents() {

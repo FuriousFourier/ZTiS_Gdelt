@@ -13,8 +13,12 @@ public class Organization {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "organization")
+    @ManyToMany(mappedBy = "organizations")
     private Set<Event> events;
+
+    public Organization(String name) {
+        this.name = name;
+    }
 
     public Organization(String name, Set<Event> events) {
         this.name = name;

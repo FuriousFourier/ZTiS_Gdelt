@@ -20,9 +20,11 @@ public class Event {
     @Column
     private int articlesNumber;
 
-    @ManyToOne
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "organization_event",
+            joinColumns = @JoinColumn(name = "organization_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private Set<Organization> organizations;
 
     @ManyToOne
     @JoinColumn(name = "event_type_id")
@@ -46,11 +48,14 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     private Set<Location> locations;
 
-    public Event(LocalDate date, long count, int articlesNumber, Organization organization, EventType eventType, Set<Source> sources, Set<Person> persons, Set<Location> locations) {
+    public Event() {
+    }
+
+    public Event(LocalDate date, long count, int articlesNumber, Set<Organization> organizations, EventType eventType, Set<Source> sources, Set<Person> persons, Set<Location> locations) {
         this.date = date;
         this.count = count;
         this.articlesNumber = articlesNumber;
-        this.organization = organization;
+        this.organizations = organizations;
         this.eventType = eventType;
         this.sources = sources;
         this.persons = persons;
@@ -89,12 +94,12 @@ public class Event {
         this.articlesNumber = articlesNumber;
     }
 
-    public Organization getOrganization() {
-        return organization;
+    public Set<Organization> getOrganizations() {
+        return organizations;
     }
 
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setOrganization(Set<Organization> organizations) {
+        this.organizations = organizations;
     }
 
     public EventType getEventType() {

@@ -16,6 +16,9 @@ public class EventType {
     @OneToMany(mappedBy = "eventType")
     private Set<Event> events;
 
+    public EventType() {
+    }
+
     public EventType(String name, Set<Event> events) {
         this.name = name;
         this.events = events;

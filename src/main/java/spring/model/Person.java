@@ -16,6 +16,9 @@ public class Person {
     @ManyToMany(mappedBy = "persons")
     private Set<Event> events;
 
+    public Person() {
+    }
+
     public Person(String name, Set<Event> events) {
         this.name = name;
         this.events = events;

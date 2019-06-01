@@ -16,6 +16,9 @@ public class SourceUrl {
     @JoinColumn(name = "source_id")
     private Source source;
 
+    public SourceUrl() {
+    }
+
     public SourceUrl(String exactUrl, Source source) {
         this.exactUrl = exactUrl;
         this.source = source;

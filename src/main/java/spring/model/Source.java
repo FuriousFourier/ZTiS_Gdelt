@@ -19,6 +19,9 @@ public class Source {
     @OneToMany(mappedBy = "source")
     private Set<SourceUrl> sourceUrls;
 
+    public Source() {
+    }
+
     public Source(String baseUrl, Set<Event> events, Set<SourceUrl> sourceUrls) {
         this.baseUrl = baseUrl;
         this.events = events;

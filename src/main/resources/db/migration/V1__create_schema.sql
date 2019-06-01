@@ -5,6 +5,13 @@ CREATE TABLE organization
     name VARCHAR(255)
 );
 
+CREATE TABLE organization_event
+(
+    organization_id BIGINT,
+    event_id BIGINT,
+    PRIMARY KEY(organization_id, event_id)
+);
+
 CREATE TABLE event_type
 (
     id BIGINT PRIMARY KEY,
@@ -47,11 +54,8 @@ CREATE TABLE person_event
 CREATE TABLE location
 (
     id BIGINT PRIMARY KEY,
-    country_code VARCHAR(255),
     country VARCHAR(255),
-    city VARCHAR(255),
-    latitude FLOAT,
-    longitude FLOAT
+    city VARCHAR(255)
 );
 
 CREATE TABLE location_event
@@ -74,13 +78,16 @@ CREATE TABLE event
     articles_number INTEGER,
 
     -- many-to-one
-    organization_id BIGINT REFERENCES organization(id),
     event_type_id BIGINT REFERENCES event_type(id)
 );
 
 ALTER TABLE source_event
     ADD CONSTRAINT source_event_source_fk FOREIGN KEY (source_id) REFERENCES source(id),
     ADD CONSTRAINT source_event_event_fk FOREIGN KEY (event_id) REFERENCES event(id);
+
+ALTER TABLE organization_event
+    ADD CONSTRAINT organization_event_organization_fk FOREIGN KEY (organization_id) REFERENCES organization(id),
+    ADD CONSTRAINT organization_event_event_fk FOREIGN KEY (event_id) REFERENCES event(id);
 
 ALTER TABLE person_event
     ADD CONSTRAINT person_event_person_fk FOREIGN KEY (person_id) REFERENCES person(id),

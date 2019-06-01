@@ -17,6 +17,13 @@
     <!-- SELECT2 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"></script>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
 
@@ -42,15 +49,14 @@
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <select class="form-control search-select2" id="select2-event-type" th:field="*{formEventType}">
                                 <option value=""></option>
-                                <option th:each="eventType : ${eventTypes}" th:value="${eventType}" th:text="${eventType}"
-                                        th:selected="${eventType} == *{formEventType}"></option>
+                                <option th:each="eventType : ${eventTypes}" th:value="${eventType}" th:text="${eventType}"></option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <p>Source</p>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <select class="form-control search-select2" id="select2-source", th:field="*{formSource}">
+                            <select class="form-control search-select2" id="select2-source" th:field="*{formSource}">
                                 <option value=""></option>
                                 <option th:each="source : ${sources}" th:value="${source}" th:text="${source}"
                                         th:selected="${source} == *{formSource}"></option>
@@ -88,7 +94,6 @@
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <select class="form-control search-select2" id="select2-city" th:field="*{formCity}">
                                 <option value=""></option>
-                                <option th:each="city : ${cities}" th:value="${city}" th:text="${city}"></option>
                             </select>
                         </div>
                     </div>
@@ -117,31 +122,57 @@
         });
 
         $('#select2-event-type').select2({
-            placeholder: "Select an event type"
+            placeholder: "Select an event type",
+            allowClear: true
         });
 
         $('#select2-source').select2({
-            placeholder: "Select formSource"
+            placeholder: "Select source",
+            allowClear: true
         });
 
         $('#select2-source-exact').select2({
-            placeholder: "Select exact formSource url"
+            placeholder: "Select exact source url",
+            allowClear: true,
+            ajax: {
+                url: 'aggregation/sources/exact',
+                data: function (params) {
+                    var query = {
+                        source: $('#select2-source').select2('data')[0].id
+                    }
+                    return query;
+                }
+            }
         });
 
         $('#select2-organization').select2({
-            placeholder: "Select an formOrganization"
+            placeholder: "Select an organization",
+            allowClear: true
         });
 
         $('#select2-person').select2({
-            placeholder: "Select formPerson"
+            placeholder: "Select person",
+            allowClear: true
         });
 
         $('#select2-country').select2({
-            placeholder: "Select formCountry"
+            placeholder: "Select country",
+            allowClear: true
         });
 
         $('#select2-city').select2({
-            placeholder: "Select formCity"
+            placeholder: "Select city",
+            allowClear: true,
+            ajax: {
+                url: 'aggregation/cities',
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        country: $('#select2-country').select2('data')[0].id
+                    };
+                    return query;
+                }
+            }
         });
     });
 

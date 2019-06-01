@@ -18,4 +18,7 @@ public interface LocationRepository extends CrudRepository<Location, Long> {
     @Query(value = "select distinct city from location where country = :country", nativeQuery = true)
     List<String> getCitiesForCountry(@Param("country") String country);
 
+    @Query(value = "select distinct city from location where country = :country AND city LIKE CONCAT(:search,'%')", nativeQuery = true)
+    List<String> getCitiesForCountryWithSearch(@Param("country") String country, @Param("search") String search);
+
 }
