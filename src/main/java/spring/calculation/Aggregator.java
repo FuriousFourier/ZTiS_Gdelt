@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 import spring.controller.ResultModel;
 import spring.form.AggregationForm;
 
+import java.util.List;
+
 @Service
 public class Aggregator {
 
-    private final RowMapper<ResultModel> aggRowMapper = (resultSet, i) ->
+    public static final RowMapper<ResultModel> RESULT_MODEL_ROW_MAPPER = (resultSet, i) ->
             new ResultModel(resultSet.getLong(1), resultSet.getLong(2));
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -84,7 +87,13 @@ public class Aggregator {
         String query = selectBuilder.append(whereBuilder).toString();
         System.out.println(query);
 
-        return jdbcTemplate.query(query, aggRowMapper).get(0);
+        List<ResultModel> result = jdbcTemplate.query(query, RESULT_MODEL_ROW_MAPPER);
+
+        if (result.isEmpty()) {
+            return new ResultModel(0, 0);
+        } else {
+            return result.get(0);
+        }
     }
 
     public String[] formatDate(String dateRange) {

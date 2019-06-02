@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import spring.calculation.Aggregator;
+import spring.calculation.Predictor;
 import spring.form.AggregationForm;
 import spring.form.PredictionForm;
 import spring.repository.*;
@@ -31,6 +32,9 @@ public class MvcController {
 
     @Autowired
     private Aggregator aggregator;
+
+    @Autowired
+    private Predictor predictor;
 
     @GetMapping("/aggregation")
     public String aggregation(Model model) {
@@ -73,7 +77,7 @@ public class MvcController {
         model.addAttribute("results", true);
         model.addAttribute("result", predictionForm);
 
-        model.addAttribute("predictionResult", new ResultModel(0, 0));
+        model.addAttribute("predictionResult", predictor.calculate(predictionForm));
 
         addAllAttributes(model);
 
