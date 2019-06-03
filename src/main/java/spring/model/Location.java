@@ -2,6 +2,7 @@ package spring.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -65,5 +66,19 @@ public class Location {
 
     public void setEvents(Set<Event> events) {
         this.events = events;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return country.equals(location.country) &&
+                city.equals(location.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(country, city);
     }
 }

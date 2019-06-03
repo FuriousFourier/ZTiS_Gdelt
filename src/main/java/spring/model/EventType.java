@@ -1,6 +1,8 @@
 package spring.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -17,6 +19,11 @@ public class EventType {
     private Set<Event> events;
 
     public EventType() {
+    }
+
+    public EventType(String name) {
+        this.name = name;
+        this.events = new HashSet<>();
     }
 
     public EventType(String name, Set<Event> events) {
@@ -46,5 +53,18 @@ public class EventType {
 
     public void setEvents(Set<Event> events) {
         this.events = events;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EventType eventType = (EventType) o;
+        return name.equals(eventType.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

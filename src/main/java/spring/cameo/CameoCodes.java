@@ -1,9 +1,6 @@
 package spring.cameo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CameoCodes {
 
@@ -29,6 +26,16 @@ public class CameoCodes {
         }
 
         return allCodes;
+    }
+
+    public static Set<String> getTilesFromId(String id) {
+        Set<String> toReturn = new HashSet<>();
+        for (String s : codeAsKey.keySet()) {
+            if (id.contains(s)) {
+                toReturn.add(s);
+            }
+        }
+        return toReturn;
     }
 
     static {
