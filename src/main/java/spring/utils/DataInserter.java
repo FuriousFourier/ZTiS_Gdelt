@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.zip.ZipInputStream;
 
 @Controller
 public class DataInserter {
@@ -57,21 +56,22 @@ public class DataInserter {
     @GetMapping("/initDb")
     public String insertDataToDb() throws FileNotFoundException {
         System.out.println("ELO");
-        final File dataDirectory = DEFAULT_DATA_DIRECTORY;
+        Map<String, Organization> organizationsToSave = new HashMap<>();
+        Map<Pair<String, String>, Location> locationsToSave = new HashMap<>();
+        Map<String, Person> peopleToSave = new HashMap<>();
+        Map<String, Source> sourcesToSave = new HashMap<>();
+        Map<String, SourceUrl> sourceUrlsToSave = new HashMap<>();
+        Map<String, EventType> eventTypesToSave = new HashMap<>();
+        Set<Event> eventsToSave = new HashSet<>();
+        final File dataDirectory = PAWEL_DATA_DIRECTORY;
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         for (File file : Objects.requireNonNull(dataDirectory.listFiles())) {
             if (!file.getName().endsWith(".csv")) {
                 continue;
             }
+            long counter = 0;
             System.out.println("File: " + file.getAbsolutePath());
             try (Scanner inputScanner = new Scanner(new FileInputStream(file))) {
-                Map<String, Organization> organizationsToSave = new HashMap<>();
-                Map<Pair<String, String>, Location> locationsToSave = new HashMap<>();
-                Map<String, Person> peopleToSave = new HashMap<>();
-                Map<String, Source> sourcesToSave = new HashMap<>();
-                Map<String, SourceUrl> sourceUrlsToSave = new HashMap<>();
-                Map<String, EventType> eventTypesToSave = new HashMap<>();
-                Set<Event> eventsToSave = new HashSet<>();
                 if (!inputScanner.hasNextLine()) {
                     continue;
                 }
@@ -224,6 +224,9 @@ public class DataInserter {
                             source.getEvents().add(event);
                             source.getSourceUrls().addAll(sourceUrls);
                         }
+                    }
+                    if (++counter >= 10000) {
+                        break;
                     }
                 }
                 locationRepository.saveAll(locationsToSave.values());
