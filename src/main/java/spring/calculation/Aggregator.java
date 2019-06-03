@@ -8,16 +8,23 @@ import org.springframework.stereotype.Service;
 import spring.controller.ResultModel;
 import spring.form.AggregationForm;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class Aggregator {
 
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public static final DateTimeFormatter H2_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static final RowMapper<ResultModel> RESULT_MODEL_ROW_MAPPER = (resultSet, i) ->
             new ResultModel(resultSet.getLong(1), resultSet.getLong(2));
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public static String parseDate(String date) {
+        return H2_FORMATTER.format(FORMATTER.parse(date));
+    }
 
     public ResultModel calculate(AggregationForm aggregationForm) {
         String[] dateRange = formatDate(aggregationForm.getFormDateRange());
@@ -25,7 +32,7 @@ public class Aggregator {
         StringBuilder selectBuilder = new StringBuilder("select sum(e.count), sum(e.articles_number) from event as e ");
 
         StringBuilder whereBuilder = new StringBuilder()
-                .append("where e.date between '").append(dateRange[0]).append("' AND '").append(dateRange[1]).append("'");
+                .append("where e.date between '").append(parseDate(dateRange[0])).append("' AND '").append(parseDate(dateRange[1])).append("'");
 
 
         if (Strings.isNotEmpty(aggregationForm.getFormPerson())) {

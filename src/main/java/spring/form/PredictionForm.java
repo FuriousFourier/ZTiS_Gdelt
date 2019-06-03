@@ -2,7 +2,7 @@ package spring.form;
 
 public class PredictionForm {
 
-    private String formDate = "01/01/2019";
+    private String formDate = "01/06/2019";
 
     private String formEventType = "";
 
