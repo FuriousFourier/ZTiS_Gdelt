@@ -18,6 +18,8 @@ public class Organization {
     @ManyToMany(mappedBy = "organizations")
     private Set<Event> events;
 
+    public Organization(){}
+
     public Organization(String name) {
         this.name = name;
         this.events = new HashSet<>();

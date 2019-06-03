@@ -13,7 +13,7 @@ public class Sandbox {
 
     private Sandbox(){}
 
-    public static void pursueSampleAnalysis(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException {
         File dataFile = null;
         for (File file : Objects.requireNonNull(DEFAULT_DATA_DIRECTORY.listFiles())) {
             if (file.getName().endsWith(".csv.zip")) {
@@ -32,6 +32,7 @@ public class Sandbox {
         long lol =0;
         try(Scanner inputScanner = new Scanner(new ZipInputStream(new FileInputStream(dataFile)))){
             while (true) {
+                System.out.println(inputScanner.next());
                 if (inputScanner.hasNextLine()) {
                     input.add(inputScanner.nextLine().split("\t"));
                     ++lol;

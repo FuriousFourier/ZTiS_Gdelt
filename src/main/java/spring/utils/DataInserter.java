@@ -55,11 +55,16 @@ public class DataInserter {
     private EventRepository eventRepository;
 
     @GetMapping("/initDb")
-    private void insertDataToDb() throws FileNotFoundException {
+    public String insertDataToDb() throws FileNotFoundException {
+        System.out.println("ELO");
         final File dataDirectory = DEFAULT_DATA_DIRECTORY;
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         for (File file : Objects.requireNonNull(dataDirectory.listFiles())) {
-            try (Scanner inputScanner = new Scanner(new ZipInputStream(new FileInputStream(file)))) {
+            if (!file.getName().endsWith(".csv")) {
+                continue;
+            }
+            System.out.println("File: " + file.getAbsolutePath());
+            try (Scanner inputScanner = new Scanner(new FileInputStream(file))) {
                 Map<String, Organization> organizationsToSave = new HashMap<>();
                 Map<Pair<String, String>, Location> locationsToSave = new HashMap<>();
                 Map<String, Person> peopleToSave = new HashMap<>();
@@ -67,8 +72,13 @@ public class DataInserter {
                 Map<String, SourceUrl> sourceUrlsToSave = new HashMap<>();
                 Map<String, EventType> eventTypesToSave = new HashMap<>();
                 Set<Event> eventsToSave = new HashSet<>();
+                if (!inputScanner.hasNextLine()) {
+                    continue;
+                }
+                inputScanner.nextLine();
                 while (inputScanner.hasNextLine()) {
-                    String[] splittedLine = inputScanner.nextLine().split("\t");
+                    String nextLine = inputScanner.nextLine();
+                    String[] splittedLine = nextLine.split("\t");
 
                     if (!splittedLine[CAMEOEVENT_IDS_INDEX].isEmpty() && !splittedLine[COUNTS_INDEX].isEmpty()) {
 
@@ -93,7 +103,8 @@ public class DataInserter {
                         Set<Location> locations = new HashSet<>();
                         String[] locationStrings = splittedLine[LOCATIONS_INDEX].split(";");
                         for (String locationString : locationStrings) {
-                            String[] strings = locationString.split("#")[1].split(", ");
+                            String[] split = locationString.split("#");
+                            String[] strings = split[1].split(", ");
                             if (strings.length == 0) {
                                 throw new RuntimeException("Something went wrong");
                             }
@@ -208,5 +219,6 @@ public class DataInserter {
                 eventRepository.saveAll(eventsToSave);
             }
         }
+        return "greeting";
     }
 }
