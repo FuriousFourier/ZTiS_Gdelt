@@ -56,13 +56,6 @@ public class DataInserter {
     @GetMapping("/initDb")
     public String insertDataToDb() throws FileNotFoundException {
         System.out.println("ELO");
-        Map<String, Organization> organizationsToSave = new HashMap<>();
-        Map<Pair<String, String>, Location> locationsToSave = new HashMap<>();
-        Map<String, Person> peopleToSave = new HashMap<>();
-        Map<String, Source> sourcesToSave = new HashMap<>();
-        Map<String, SourceUrl> sourceUrlsToSave = new HashMap<>();
-        Map<String, EventType> eventTypesToSave = new HashMap<>();
-        Set<Event> eventsToSave = new HashSet<>();
         final File dataDirectory = PAWEL_DATA_DIRECTORY;
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         for (File file : Objects.requireNonNull(dataDirectory.listFiles())) {
@@ -72,6 +65,13 @@ public class DataInserter {
             long counter = 0;
             System.out.println("File: " + file.getAbsolutePath());
             try (Scanner inputScanner = new Scanner(new FileInputStream(file))) {
+                Map<String, Organization> organizationsToSave = new HashMap<>();
+                Map<Pair<String, String>, Location> locationsToSave = new HashMap<>();
+                Map<String, Person> peopleToSave = new HashMap<>();
+                Map<String, Source> sourcesToSave = new HashMap<>();
+                Map<String, SourceUrl> sourceUrlsToSave = new HashMap<>();
+                Map<String, EventType> eventTypesToSave = new HashMap<>();
+                Set<Event> eventsToSave = new HashSet<>();
                 if (!inputScanner.hasNextLine()) {
                     continue;
                 }
