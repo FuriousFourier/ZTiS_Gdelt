@@ -46,8 +46,9 @@
                             <input type="text" id="select-date" class="form-control" th:value="*{formDate}" th:field="*{formDate}" />
                         </div>
                     </div>
+                    <br/>
                     <div class="row">
-                        <p>Event type</p>
+                        <div class="col-lg-1 col-md-1 col-sm-12 p-0">Event type</div>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <select class="form-control search-select2" id="select2-event-type" th:field="*{formEventType}">
                                 <option value=""></option>
@@ -56,7 +57,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <p>Source</p>
+                        <div class="col-lg-1 col-md-1 col-sm-12 p-0">Source</div>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <select class="form-control search-select2" id="select2-source" th:field="*{formSource}">
                                 <option value=""></option>
@@ -71,7 +72,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <p>Who</p>
+                        <div class="col-lg-1 col-md-1 col-sm-12 p-0">Who</div>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <select class="form-control search-select2" id="select2-organization" th:field="*{formOrganization}">
                                 <option value=""></option>
@@ -86,7 +87,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <p>Where</p>
+                        <div class="col-lg-1 col-md-1 col-sm-12 p-0">Where</div>
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
                             <select class="form-control search-select2" id="select2-country" th:field="*{formCountry}">
                                 <option value=""></option>
@@ -101,7 +102,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-3 col-md-3 col-sm-12 p-0">
-                            <button type="submit" class="btn btn-danger wrn-btn">Search</button>
+                            <button type="submit" class="btn btn-danger wrn-btn">Predict</button>
                         </div>
                     </div>
                 </div>

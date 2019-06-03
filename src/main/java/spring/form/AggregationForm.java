@@ -2,7 +2,7 @@ package spring.form;
 
 public class AggregationForm {
 
-    private String formDateRange = "01/01/2018 - 31/01/2018";
+    private String formDateRange = "01/06/2018 - 30/06/2018";
 
     private String formEventType = "";
 

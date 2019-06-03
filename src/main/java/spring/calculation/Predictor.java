@@ -9,16 +9,14 @@ import spring.controller.ResultModel;
 import spring.form.PredictionForm;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static spring.calculation.Aggregator.RESULT_MODEL_ROW_MAPPER;
+import static spring.calculation.Aggregator.*;
 
 @Service
 public class Predictor {
 
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public static final NormalDistribution NORMAL_DISTRIBUTION = new NormalDistribution(0, 2);
 
     @Autowired
@@ -97,7 +95,7 @@ public class Predictor {
              currentDate.isBefore(dateEnd) || currentDate.isEqual(dateEnd);
              currentDate = currentDate.plusDays(1)) {
 
-            String whereDate = "where e.date = '" + FORMATTER.format(currentDate) + "'";
+            String whereDate = "where e.date = '" + H2_FORMATTER.format(currentDate) + "'";
             String query = select + whereDate + restWhere;
 
             List<ResultModel> dayResults = jdbcTemplate.query(query, RESULT_MODEL_ROW_MAPPER);
