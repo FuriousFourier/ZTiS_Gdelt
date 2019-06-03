@@ -1,6 +1,7 @@
 package spring.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,6 +21,12 @@ public class Location {
     private Set<Event> events;
 
     public Location() {
+    }
+
+    public Location(String country, String city) {
+        this.country = country;
+        this.city = city;
+        this.events = new HashSet<>();
     }
 
     public Location(String country, String city, Set<Event> events) {

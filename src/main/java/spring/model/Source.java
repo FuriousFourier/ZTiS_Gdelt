@@ -1,6 +1,7 @@
 package spring.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -20,6 +21,12 @@ public class Source {
     private Set<SourceUrl> sourceUrls;
 
     public Source() {
+    }
+
+    public Source(String baseUrl) {
+        this.baseUrl = baseUrl;
+        this.events = new HashSet<>();
+        this.sourceUrls = new HashSet<>();
     }
 
     public Source(String baseUrl, Set<Event> events, Set<SourceUrl> sourceUrls) {

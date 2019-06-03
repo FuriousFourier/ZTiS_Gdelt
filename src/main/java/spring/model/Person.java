@@ -1,6 +1,7 @@
 package spring.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,6 +18,11 @@ public class Person {
     private Set<Event> events;
 
     public Person() {
+    }
+
+    public Person(String name) {
+        this.name = name;
+        this.events = new HashSet<>();
     }
 
     public Person(String name, Set<Event> events) {
