@@ -208,22 +208,6 @@ public class DataInserter {
                         //events
                         Event event = new Event(LocalDate.parse(splittedLine[DATE_INDEX], formatter), count, Integer.parseInt(splittedLine[NUMARTS_INDEX]), organizations, eventType, sourceSet, people, locations);
                         eventsToSave.add(event);
-                        for (EventType type : eventTypes) {
-                            type.getEvents().add(event);
-                        }
-                        for (Location location : locations) {
-                            location.getEvents().add(event);
-                        }
-                        for (Organization organization : organizations) {
-                            organization.getEvents().add(event);
-                        }
-                        for (Person person : people) {
-                            person.getEvents().add(event);
-                        }
-                        for (Source source : sources) {
-                            source.getEvents().add(event);
-                            source.getSourceUrls().addAll(sourceUrls);
-                        }
                     }
                 }
                 locationRepository.saveAll(locationsToSave.values());
