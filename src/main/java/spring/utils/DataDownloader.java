@@ -10,13 +10,18 @@ public class DataDownloader {
 
     private static final int DEFAULT_BUFFER_SIZE = 200 * 1024;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
-    private static final Date DEFAULT_BEGINNING_DATE = new Date(118, Calendar.APRIL, 13);
-    private static final Date DEFAULT_ENDING_DATE = new Date(119, Calendar.APRIL, 6);
+    private static final Date DEFAULT_BEGINNING_DATE = new Date(118, Calendar.JANUARY, 1);
+    private static final Date DEFAULT_ENDING_DATE = new Date(119, Calendar.JANUARY, 1);
 
     private final File dataDirectory;
     private Date begginningDate;
     private Date endingDate;
     private int initialBufferSize;
+
+    public static void main(String[] args) throws IOException, ParseException {
+        DataDownloader downloader = new DataDownloader(new File("/home/lukasz/Documents/ztis/data"));
+        downloader.downloadData();
+    }
 
     public DataDownloader(File dataDirectory) {
         this(dataDirectory, DEFAULT_BUFFER_SIZE);
@@ -75,8 +80,10 @@ public class DataDownloader {
         long lineCounter = 0;
         List<String> filenames = new LinkedList<>();
         try (Scanner fileSizesInput = new Scanner(new ByteArrayInputStream(downloadToMemory(filesizesUrl + "filesizes")))){
-            while (fileSizesInput.hasNextLine()
-                    && DATE_FORMAT.parse(fileSizesInput.nextLine().split(" ")[1].split("\\.")[0]).before(begginningDate)){
+            String lastLine = null;
+            while (fileSizesInput.hasNextLine()){
+                lastLine = fileSizesInput.nextLine();
+                if (!DATE_FORMAT.parse(lastLine.split(" ")[1].split("\\.")[0]).before(begginningDate)) break;
                 ++lineCounter;
             }
             if (!fileSizesInput.hasNextLine()) {
@@ -84,7 +91,8 @@ public class DataDownloader {
                 System.exit(1);
             }
             while (fileSizesInput.hasNextLine()) {
-                String[] line = fileSizesInput.nextLine().split(" ");
+                String[] line = lastLine.split(" ");
+                fileSizesInput.nextLine();
                 Date thisDate = DATE_FORMAT.parse(line[1].split("\\.")[0]);
                 if (thisDate.after(endingDate)) {
                     break;
@@ -100,7 +108,7 @@ public class DataDownloader {
                     System.exit(2);
                 }
                 ++lineCounter;
-                fileSizesInput.nextLine();
+                lastLine = fileSizesInput.nextLine();
             }
             System.out.println("Needed size for downloaded ZIPPED files: " + convertSizeToString(sumSizes) + ". Would you like to continue?");
             while(true) {
