@@ -225,7 +225,7 @@ public class DataInserter {
                             source.getSourceUrls().addAll(sourceUrls);
                         }
                     }
-                    if (++counter >= 10000) {
+                    if (++counter >= 1000) {
                         break;
                     }
                 }
