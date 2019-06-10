@@ -7,8 +7,8 @@ public class ResultModel {
     private long articles;
 
     public ResultModel(long events, long articles) {
-        this.events = 13 * events;
-        this.articles = 13 * articles;
+        this.events = events;
+        this.articles = articles;
     }
 
     public long getEvents() {

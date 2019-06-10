@@ -62,7 +62,6 @@ public class DataInserter {
             if (!file.getName().endsWith(".csv")) {
                 continue;
             }
-            long counter = 0;
             System.out.println("File: " + file.getAbsolutePath());
             try (Scanner inputScanner = new Scanner(new FileInputStream(file))) {
                 Map<String, Organization> organizationsToSave = new HashMap<>();
@@ -224,9 +223,6 @@ public class DataInserter {
                             source.getEvents().add(event);
                             source.getSourceUrls().addAll(sourceUrls);
                         }
-                    }
-                    if (++counter >= 1000) {
-                        break;
                     }
                 }
                 locationRepository.saveAll(locationsToSave.values());
